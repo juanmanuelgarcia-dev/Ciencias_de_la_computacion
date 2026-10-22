@@ -1,0 +1,103 @@
+Algoritmo juego
+	Definir tablero,orden,movimientos,direccion Como Entero
+	movimientos <- 0
+	Repetir
+		Escribir "Ingrese el orden del tablero: "
+		leer orden
+	Mientras Que orden < 4 o orden > 8
+	Dimension tablero(orden,orden)
+	inicializarMatriz(orden,tablero)
+	mostrarTablero(orden,tablero)
+	Repetir
+		Repetir
+			Escribir "Ingrese la direccion(1. Arriba; 2.Abajo;3. Izquierda; 4.Derecha): "
+			leer direccion
+		Mientras Que direccion < 1 o direccion > 4
+		segun direccion Hacer
+			1:
+				direccionMovimiento(tablero,orden,direccion)
+		FinSegun
+		direccionMovimiento(tablero,orden,direccion)
+		mostrarTablero(orden,tablero)
+		
+		
+		
+	Mientras Que movimientos < 20 y colision64(tablero,orden) = Verdadero
+FinAlgoritmo
+
+SubProceso inicializarMatriz(orden,tablero)
+	definir i,j,filados,columnados,filauno,columnauno como entero
+	para i <- 0 Hasta orden - 1 Hacer
+		para j <- 0 Hasta orden - 1 Hacer
+			tablero(i,j) <- 0
+		FinPara
+	FinPara
+	Repetir
+		filauno <- Aleatorio(0,orden-1)
+		filados <- Aleatorio(0,orden-1)
+		columnauno <- Aleatorio(0,orden-1)
+		columnados <- Aleatorio(0,orden-1) 
+	Mientras Que filauno = filados y columnauno = columnados
+	tablero(filauno,columnauno) <- 2
+	tablero(filados,columnados) <- 2
+FinSubProceso
+
+SubProceso mostrarTablero(orden,tablero)
+	Definir i,j Como Entero
+	para i <- 0 Hasta orden - 1 Hacer
+		para j <- 0 Hasta orden - 1 Hacer
+			si tablero(i,j) = 0 Entonces
+				Escribir Sin Saltar "[   ]"
+			SiNo
+				Escribir Sin Saltar "[ ",tablero(i,j)," ]"
+				Escribir Sin Saltar " "
+			FinSi
+		FinPara
+		Escribir ""
+	FinPara
+FinSubProceso
+
+funcion colision <- colision64(tablero,orden)
+	Definir i,j Como Entero
+	Definir colision Como Logico
+	colision <- Falso
+	para i <- 0 Hasta orden - 1 Hacer
+		para j <- 0 Hasta orden - 1 Hacer
+			si tablero(i,j) = 64 Entonces
+				colision <- Verdadero
+			FinSi
+		FinPara
+	FinPara
+FinFuncion
+
+SubProceso direccionMovimiento(tablero,orden,direccion)
+	Definir i,j,fila,columna Como Entero
+	para i <- 0 Hasta orden - 1 Hacer
+		para j <- 0 Hasta orden - 1 Hacer
+			si tablero(i,j) <> 0 Entonces
+				si direccion = 1 Entonces
+					si i - 1 >= 0 y tablero(i-1,j) = 0 Entonces
+						mientras i - 1 >= 0 y tablero(i-1,j) = 0 Hacer
+							tablero(i-1,j) <- tablero(i,j)
+							tablero(i,j) <- 0
+						FinMientras
+					SiNo
+						si tablero(i-1,j) <> 0 Entonces
+							fila <- i -1
+							filaAnterior <- i
+							columnaAnterior <- i
+							realizarFusion(tablero,orden,fila,filaAnterior,columnaAnterior)
+						FinSi
+					FinSi
+				FinSi
+			FinSi
+		FinPara
+	FinPara
+FinSubProceso
+
+SubProceso realizarFusion(tablero,orden,n,filaAnterior,columnaAnterior)
+	tablero(n,columnaAnterior) <- tablero(n,columnaAnterior) + tablero(filaAnterior,columnaAnterior)
+FinSubProceso
+
+
+	

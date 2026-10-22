@@ -1,0 +1,191 @@
+Algoritmo ponzior
+	Definir tablero,tamañoContenedor,nombreContenedor Como Caracter
+	Definir jugada,filaContenedor,tamaño Como Entero
+	Dimension tablero(5,5)
+	iniciarTablero(tablero)
+	mostrarMatriz(tablero)
+	jugada <- 0
+	filaContenedor <- 0
+	filaContenedor = traducirFilaContenedor(filaContenedor)
+	Repetir
+		jugada <- jugada + 1
+		Repetir
+			Escribir "Ingrese el nombre del contenedor: "
+			leer nombreContenedor
+		Mientras Que nombreContenedor = "X"
+		
+		Repetir
+			Escribir "Ingrese el tamaño del contenedor(L.large,R.regular,S.small): "
+			leer tamañoContenedor
+		Mientras Que tamañoContenedor <> "L" y tamañoContenedor <> "R" y tamañoContenedor <> "S"
+		
+		Segun tamañoContenedor Hacer
+			"L":
+				tamaño <- 4
+			"R":
+				tamaño <- 3
+			"S":
+				tamaño <- 2
+		FinSegun
+	
+		solicitarPosicionTablero(tablero,filaContenedor,tamaño,nombreContenedor)
+		mostrarMatriz(tablero)
+		Escribir "Paso ",jugada
+		Escribir "Nombre de la carga ",nombreContenedor
+		Escribir "Tamaño de la carga ",tamañoCarga(tamaño)
+		Escribir fila(filaContenedor),"(",filaContenedor+1,",",verificarColumna(tablero,filaContenedor)-tamaño + 1,")"
+	Mientras Que verificarLlenado(tablero) = Falso
+	
+	Escribir "Gracias por confiar en el barco ponzior"
+FinAlgoritmo
+
+SubProceso iniciarTablero(tablero)
+	Definir i,j Como Entero
+	para i <- 0 Hasta 4 Hacer
+		para j <- 0 Hasta 4 Hacer
+			tablero(i,j) <- "X"
+		FinPara
+	FinPara
+FinSubProceso
+
+SubProceso mostrarMatriz(tablero)
+	Definir i,j Como Entero
+	para i <- 0 Hasta 4 Hacer
+		para j <- 0 Hasta 4 Hacer
+			si tablero(i,j) = "X" Entonces
+				Escribir Sin Saltar "[   ]"
+			SiNo
+				Escribir Sin Saltar "[ ",tablero(i,j)," ]"
+				Escribir Sin Saltar " "
+			FinSi
+		FinPara
+		Escribir ""
+	FinPara
+FinSubProceso
+
+SubProceso solicitarPosicionTablero(tablero,filaContenedor Por Referencia,tamaño,nombreContenedor)
+	Definir i,j,contador Como Entero
+	Definir cargaHecha Como Logico
+	contador <- 0
+	Repetir
+		cargaHecha <- Falso
+		si tablero(filaContenedor,0) = "X" Entonces
+			para i <- 0 Hasta tamaño - 1 Hacer
+				tablero(filaContenedor,i) <- nombreContenedor
+			FinPara
+			cargaHecha <- Verdadero
+		SiNo
+			contador <- verificarColumna(tablero,filaContenedor)
+			si contador + tamaño <= 5 Entonces
+				para i <- posicionInicial(tablero,filaContenedor) Hasta (tamaño- 1) + posicionInicial(tablero,filaContenedor) Hacer
+					tablero(filaContenedor,i) <- nombreContenedor
+				FinPara
+				cargaHecha <- Verdadero
+			SiNo
+				si filaContenedor <> 4 Entonces
+					filaContenedor <- traducirPrimeraFila(filaContenedor)
+					filaContenedor <- filaContenedor + 1
+					filaContenedor <- traducirFilaContenedor(filaContenedor)
+					cargaHecha <- Falso
+				FinSi
+			FinSi
+		FinSi
+	Mientras Que cargaHecha = Falso
+FinSubProceso
+
+Funcion PosicionI <- posicionInicial(tablero,filaContenedor)
+	Definir posicionI,i Como Entero
+	posicionI <- 0
+	i <- 0
+	Mientras tablero(filaContenedor,i) <> "X" y i < 5 Hacer
+		posicionI <- posicionI + 1
+		i <- i + 1
+	FinMientras
+FinFuncion
+
+Funcion traducirFila <- traducirFilaContenedor(filaContenedor)
+	Definir traducirFila Como Entero
+	Segun filaContenedor Hacer
+		0:
+			traducirFila <- 2
+		1:
+			traducirFila <- 1
+		2:
+			traducirFila <- 3
+		3:
+			traducirFila <- 0
+		4:
+			traducirFila <- 4
+	FinSegun
+FinFuncion
+
+Funcion traducirFila <- traducirPrimeraFila(filaContenedor)
+	Definir traducirFila Como Entero
+	Segun filaContenedor Hacer
+		0:
+			traducirFila <- 3
+		1:
+			traducirFila <- 1
+		2:
+			traducirFila <- 0
+		3:
+			traducirFila <- 2
+		4:
+			traducirFila <- 4
+	FinSegun
+FinFuncion
+
+Funcion lleno <- verificarLlenado(tablero)
+    Definir lleno Como Logico
+    Definir i, libres Como Entero
+    libres <- 0
+    Para i <- 0 Hasta 4 Hacer
+        Si tablero(4,i) = "X" Entonces
+            libres <- libres + 1
+        FinSi
+    FinPara
+    Si libres < 2 Entonces
+        lleno <- Verdadero
+    SiNo
+        lleno <- Falso
+    FinSi
+FinFuncion
+
+Funcion nombre <- tamañoCarga(tamaño)
+	Definir nombre como caracter
+	Segun tamaño Hacer
+		2:
+			nombre <-"Small"
+		3:
+			nombre <- "Regular"
+		4:
+			nombre <- "Large"
+	FinSegun
+FinFuncion
+
+Funcion nombre <- fila(filaContenedor)
+	Definir nombre como caracter
+	Segun filaContenedor Hacer
+		0:
+			nombre <- "Proa"
+		1:
+			nombre <- "Proa"
+		2:
+			nombre <- "Central"
+		3:
+			nombre <- "Popa"
+		4:
+			nombre <- "Popa"
+	FinSegun
+FinFuncion
+
+Funcion columna <- verificarColumna(tablero,filaContenedor)
+	Definir columna,i como entero
+	columna <- 0
+	para i <- 0 Hasta 4 Hacer
+		si tablero(filaContenedor,i) <> "X" Entonces
+			columna <- columna + 1
+		FinSi
+	FinPara
+FinFuncion
+	

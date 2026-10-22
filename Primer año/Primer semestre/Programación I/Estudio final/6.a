@@ -1,0 +1,138 @@
+Algoritmo juego
+	
+	definir tablero,jugada,jugador,display,numElegido Como Entero
+	Definir filaPosible,columnaPosible,valores,i Como Entero
+	
+	display <- 0
+	jugada <- 0
+	filaPosible <- 0
+	columnaPosible <- 0
+	
+	Dimension valores(4)
+	Dimension tablero(3,3)
+	
+	//inicializo la matriz
+	inicializaTablero(tablero)
+	
+	Repetir
+		//Determino de que jugador es el turno
+		jugada <- jugada + 1
+		si jugada % 2 <> 0 Entonces
+			jugador <- 1
+		SiNo
+			jugador <- 2
+		FinSi
+		
+		Escribir "Turno del jugador N° ",jugador
+		Escribir "Display ",display
+		
+		//Muestro la matriz
+		mostrarMatriz(tablero)
+		
+		//En la primera jugada muestro todos los numeros
+		si jugada = 1 Entonces
+			Repetir
+				Escribir "Números disponibles 1,2,3,4,5,6,7,8,9 "
+				leer numElegido
+			Mientras Que numElegido < 1 o numElegido > 9
+			display <- display + numElegido
+			
+			//determino la fila y columna del numero elegido y lo paso por referencia
+			recorrerFilaColumna(tablero,numElegido,filaPosible,columnaPosible)
+			
+		SiNo
+			//A partir de la segunda jugada
+			inicarVector(valores)
+			Repetir
+				//Uso el vector para determinar los posibles numeros que se pueden elegir
+				calcularPosiblesNumeros(valores,filaPosible,columnaPosible,tablero)
+				Escribir "Numeros disponibles: "
+				para i <- 0 Hasta 3 Hacer
+					si valores(i) <> 0 Entonces
+						Escribir Sin Saltar valores(i)
+					FinSi
+				FinPara
+				leer numElegido
+			Mientras Que numElegido <> valores(0) y numElegido <> valores(1) y numElegido <> valores(2) y numElegido <> valores(3)
+			display <- display + numElegido
+			
+			//determino la fila y columna del numero elegido y lo paso por referencia
+			recorrerFilaColumna(tablero,numElegido,filaPosible,columnaPosible)
+			
+		FinSi
+		//Finalizo la ejecucion
+		
+	Mientras Que display < 31
+	//Determino el ganador
+	
+	si jugador = 1 Entonces
+		Escribir "Felicitaciones jugador N° 2, usted ganó"
+	SiNo
+		Escribir "Felicitaciones jugador N° 1, usted ganó"
+	FinSi
+	
+FinAlgoritmo
+
+SubProceso inicializaTablero(tablero)
+	Definir i,j,suma Como Entero
+	suma <- 0
+	para i <- 2 Hasta 0 Con Paso -1 Hacer
+		para j <- 0 Hasta 2 Con Paso 1 Hacer
+			suma <- suma + 1
+			tablero(i,j) <- suma
+		FinPara
+	FinPara
+FinSubProceso
+
+SubProceso mostrarMatriz(tablero)
+	Definir i,j Como Entero
+	para i <- 0 Hasta 2 Hacer
+		para j <- 0 Hasta 2 Hacer
+			si tablero(i,j) <> 0 Entonces
+				Escribir Sin Saltar tablero(i,j)
+				Escribir Sin Saltar " "
+			SiNo
+				Escribir Sin Saltar "#"
+				Escribir Sin Saltar " "
+			FinSi
+		FinPara
+		Escribir ""
+	FinPara
+FinSubProceso
+
+SubProceso recorrerFilaColumna(tablero,numElegido,filaPosible Por Referencia,columnaPosible Por Referencia)
+	Definir i,j Como Entero
+	para i <- 0 Hasta 2 Hacer
+		para j <- 0 Hasta 2 Hacer
+			si tablero(i,j) = numElegido Entonces
+				filaPosible <- i
+				columnaPosible <- j
+				tablero(i,j) <- 0
+			FinSi
+		FinPara
+	FinPara
+FinSubProceso
+
+SubProceso calcularPosiblesNumeros(valores,filaPosible,columnaPosible,tablero)
+	Definir i, j, suma Como Entero
+    suma <- 0
+    Para j <- 0 Hasta 2 Hacer
+        Si tablero(filaPosible, j) <> tablero(filaPosible, columnaPosible) Y tablero(filaPosible, j) <> 0 Entonces
+            valores(suma) <- tablero(filaPosible, j)
+            suma <- suma + 1
+        FinSi
+    FinPara
+    Para i <- 0 Hasta 2 Hacer
+        Si tablero(i,columnaPosible) <> tablero(filaPosible,columnaPosible) Y tablero(i,columnaPosible) <> 0 Entonces
+            valores(suma) <- tablero(i,columnaPosible)
+            suma <- suma + 1
+        FinSi
+    FinPara
+FinSubProceso
+
+SubProceso inicarVector(valores)
+	Definir i Como entero
+	para i <- 0 Hasta 3 Hacer
+		valores(i) <- 0
+	FinPara
+FinSubProceso

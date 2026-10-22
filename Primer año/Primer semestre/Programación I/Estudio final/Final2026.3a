@@ -1,0 +1,154 @@
+algoritmo final3
+	definir tablero,fila,columna,filaJugador,columnaJugador,turno Como Entero
+	definir juegoTerminado,repetriSolicitud Como logico
+	Definir respuesta Como Caracter
+	juegoTerminado <- Falso
+	turno <- 0
+	Repetir
+		repetriSolicitud = Falso
+		Escribir "Ingrese la cantidad de filas(impar de 3 a 15): "
+		leer fila
+		Escribir "Ingrese la cantidad de columnas(de 4 a 20): "
+		leer columna
+		si fila < 3 o fila > 15 o columna < 4 o columna > 20 Entonces
+			repetriSolicitud = Verdadero
+			Escribir "No es posible ingresar esa cantidad de filas o columnas"
+		SiNo
+			si fila % 2 = 0 Entonces
+				Escribir "La cantidad de filas debe ser impar"
+				repetriSolicitud = Verdadero
+			FinSi
+		FinSi
+	Mientras Que repetriSolicitud = Verdadero
+	
+	
+	filaJugador <- fila-1
+	columnaJugador <- columna-1
+	
+	Dimension tablero(fila,columna)
+	turno <- turno + 1
+	Escribir "Este es el turno N° ",turno
+	iniciarMatriz(tablero,fila,columna)
+	mostrarMatriz(tablero,fila,columna,columnaJugador,filaJugador)
+	Repetir
+		solicitarPosicionTablero(tablero,fila,columna,columnaJugador,filaJugador)
+		mostrarMatriz(tablero,fila,columna,columnaJugador,filaJugador)
+		Repetir
+			Escribir "Desea seguir jugando(S/N)"
+			leer respuesta
+		Mientras Que respuesta <> "S" y respuesta <> "N"
+		
+		si respuesta = "N" Entonces
+			juegoTerminado = Verdadero
+			ganador = Falso
+		FinSi
+		
+		si filaJugador = 0 y columnaJugador = 0 Entonces
+			juegoTerminado <- Verdadero
+			ganador <- Verdadero
+		FinSi
+	Mientras Que juegoTerminado = Falso
+	
+	si ganador = falso Entonces
+		Escribir "Usted perdió el juego"
+	SiNo
+		Escribir "GANO!"
+	FinSi
+FinAlgoritmo
+
+SubProceso iniciarMatriz(tablero,fila,columna)
+	definir contador,i,j Como Entero
+	contador <- 0
+	para i <- fila - 1 Hasta 0 Hacer
+		si i % 2 = 0 Entonces
+			para j <- columna - 1 Hasta 0 Hacer
+				tablero(i,j) <- contador
+				contador <- contador + 1
+			FinPara
+		SiNo
+			para j <- 0 Hasta columna - 1 Hacer
+				tablero(i,j) <- contador
+				contador <- contador + 1
+			FinPara
+		FinSi
+	FinPara
+FinSubProceso
+
+SubProceso mostrarMatriz(tablero,fila,columna,columnaJugador,filaJugador)
+	Definir i,j Como Entero
+	para i <- 0 Hasta fila - 1 Hacer
+		para j <- 0 Hasta columna - 1 Hacer
+			si i = filaJugador y j = columnaJugador Entonces
+				Escribir Sin Saltar "A"
+				Escribir Sin Saltar " "
+			SiNo
+				Escribir Sin Saltar tablero(i,j)
+				Escribir Sin Saltar " "
+			FinSi
+		FinPara
+		Escribir ""
+	FinPara
+FinSubProceso
+
+SubProceso solicitarPosicionTablero(tablero,fila,columna,columnaJugador Por Referencia,filaJugador Por Referencia)
+    Definir brujula Como Entero
+    brujula <- Aleatorio(1,6)
+    Escribir "El resultado de la brujula fue: ", brujula
+	
+    Si filaJugador % 2 = 0 Entonces
+        moverIzquierda(brujula,columnaJugador,filaJugador,columna)
+    SiNo
+        moverDerecha(brujula,columnaJugador,filaJugador,columna)
+	FinSi
+	
+	si (filaJugador + columnaJugador % 2) = 0 Entonces
+		si fila % 2 = 0 Entonces
+			moverIzquierda(2,columnaJugador,filaJugador,columna)
+		SiNo
+			moverDerecha(-2,columnaJugador,filaJugador,columna)
+		FinSi
+	SiNo
+		si fila % 2 = 0 Entonces
+			moverIzquierda(1,columnaJugador,filaJugador,columna)
+		SiNo
+			moverDerecha(1,columnaJugador,filaJugador,columna)
+		FinSi
+	FinSi
+FinSubProceso
+
+SubProceso moverIzquierda(brujula,columnaJugador Por Referencia,filaJugador Por Referencia,columna)
+	definir pasosRestantes Como Entero
+	pasosRestantes <- 0
+	Si columnaJugador - brujula < 0 y filaJugador <> 0 Entonces
+		mientras columnaJugador - 1 >= 0 Hacer
+			pasosRestantes <- pasosRestantes + 1
+			columnaJugador <- columnaJugador - 1
+		FinMientras
+		filaJugador <- filaJugador - 1
+		columnaJugador <- columnaJugador + (brujula - pasosRestantes - 1)
+	SiNo
+		si filaJugador = 0 y columnaJugador - brujula < 0 Entonces
+			columnaJugador <- 2
+		SiNo
+			columnaJugador <- columnaJugador - brujula
+		FinSi
+	FinSi
+FinSubProceso
+
+SubProceso moverDerecha(brujula,columnaJugador Por Referencia,filaJugador Por Referencia,columna)
+	definir pasosRestantes Como Entero
+	pasosRestantes <- 0
+	Si columnaJugador + brujula > columna - 1 Entonces
+		mientras columnaJugador + 1 <= columna -1 Hacer
+			pasosRestantes <- pasosRestantes + 1
+			columnaJugador <- columnaJugador + 1
+		FinMientras
+		filaJugador <- filaJugador - 1
+		columnaJugador <- columnaJugador - (brujula - pasosRestantes - 1)
+	SiNo
+		columnaJugador <- columnaJugador + brujula
+	FinSi
+FinSubProceso
+
+
+	

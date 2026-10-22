@@ -1,0 +1,177 @@
+Algoritmo linea
+	definir tablero,ficha Como Caracter
+	definir turno,jugador Como Entero
+	definir ganador,terminarJuego Como Logico
+	turno = 1
+	terminarJuego <- Falso
+	ganador = Falso
+	Dimension tablero(6,7)
+	iniciarMatriz(tablero)
+	MostrarMatriz(tablero)
+	
+	Repetir
+		si turno > 42 Entonces
+			terminarJuego = Verdadero
+			ganador = Falso
+		FinSi
+		si turno % 2 <> 0 Entonces
+			ficha <- "R"
+			jugador <- 1
+		SiNo
+			ficha <- "B"
+			jugador <- 2
+		FinSi
+		Escribir "Turno del jugador ",jugador," con ficha ",ficha
+		solicitarPosicionEnElTablero(tablero,ficha)
+		MostrarMatriz(tablero)
+		turno <- turno + 1
+		si verificarGandor(tablero,"R") = Verdadero Y verificarGandor(tablero,"B") = Verdadero Entonces
+			terminarJuego <- Verdadero
+			ganador = Falso
+		SiNo
+			si verificarGandor(tablero,ficha) = Verdadero Entonces
+				ganador = Verdadero
+				terminarJuego <- Verdadero
+			FinSi
+		FinSi
+	Mientras Que terminarJuego = Falso
+	si ganador = Verdadero Entonces
+		Escribir "Felicitaciones el jugador ",jugador," con la ficha ",ficha," ganó"
+	SiNo
+		Escribir "Hubo un empate"
+	FinSi
+FinAlgoritmo
+
+SubProceso iniciarMatriz(tablero)
+	Definir i,j como entero
+	para i <- 0 Hasta 5 Hacer
+		para j <- 0 Hasta 6 Hacer
+			tablero(i,j) <- "L"
+		FinPara
+	FinPara
+FinSubProceso
+
+SubProceso MostrarMatriz(tablero)
+	definir i,j Como Entero
+	para i <- 0 Hasta 5 Hacer
+		para j <- 0 Hasta 6 Hacer
+			Escribir Sin Saltar "[ ",tablero(i,j)," ]"
+			Escribir Sin Saltar " "
+		FinPara
+		Escribir ""
+	FinPara
+FinSubProceso
+
+SubProceso solicitarPosicionEnElTablero(tablero,ficha)
+	Definir i,columna como entero
+	definir repetirSolicitud,fichaColocada Como Logico
+	i <- 6
+	fichaColocada <- Falso
+	Repetir
+		repetirSolicitud <- Falso
+		Escribir "Ingrese la columna que desee: "
+		leer columna
+		columna <- columna - 1
+		si columna < 0 o columna > 6 Entonces
+			repetirSolicitud = Verdadero
+			Escribir "Esa columna no es posible"
+		SiNo
+			si tablero(0,columna) <> "L" Entonces
+				Escribir "Esa columna se encuentra completamente ocupada"
+				repetirSolicitud = Verdadero
+			FinSi
+		FinSi
+	Mientras Que repetirSolicitud = Verdadero
+	
+	Repetir
+		i <- i - 1
+		si tablero(i,columna) = "L" Entonces
+			tablero(i,columna) <- ficha
+			fichaColocada = Verdadero
+		FinSi
+	Mientras Que fichaColocada = Falso
+FinSubProceso
+
+funcion ganador <- verificarGandor(tablero,ficha)
+	definir ganador Como Logico
+	ganador <- Falso
+	si verificarFila(tablero,ficha) = Verdadero Entonces
+		ganador <- Verdadero
+	SiNo
+		si verificarColumna(tablero,ficha) = Verdadero Entonces
+			ganador <- Verdadero
+		SiNo
+			si verificarDiagonal(tablero,ficha) = Verdadero Entonces
+				ganador <- Verdadero
+			SiNo
+				si verificarDiagonalSecundaria(tablero,ficha) = Verdadero Entonces
+					ganador <- Verdadero
+				FinSi
+			FinSi
+		FinSi
+	FinSi
+FinFuncion
+
+Funcion fila <- verificarFila(tablero,ficha)
+	definir fila Como Logico
+	definir contador,i,j Como Entero
+	fila <- Falso
+	contador <- 0
+	para i <- 0 Hasta 5 Hacer
+		para j <- 0 Hasta 6 Hacer
+			si tablero(i,j) = ficha Entonces
+				contador = contador + 1
+				si contador = 4 Entonces
+					fila = Verdadero
+				FinSi
+			SiNo
+				contador <- 0
+			FinSi
+		FinPara
+	FinPara
+FinFuncion
+
+Funcion columna <- verificarColumna(tablero,ficha)
+	definir columna Como Logico
+	definir contador,i,j Como Entero
+	columna <- Falso
+	contador <- 0
+	para j <- 0 Hasta 6 Hacer
+		para i <- 0 Hasta 5 Hacer
+			si tablero(i,j) = ficha Entonces
+				contador = contador + 1
+				si contador = 4 Entonces
+					columna = Verdadero
+				FinSi
+			SiNo
+				contador <- 0
+			FinSi
+		FinPara
+	FinPara
+FinFuncion
+
+Funcion diagonal <- verificarDiagonal(tablero,ficha)
+	Definir diagonal Como Logico
+	definir i,j Como Entero
+	diagonal <- Falso
+	para i <- 0 Hasta 2 Hacer
+		para j <- 0 Hasta 3 Hacer
+			si tablero(i,j) = ficha y tablero(i+1,j+1) = ficha y tablero(i+2,j+2) = ficha y tablero(i+3,j+3) = ficha Entonces
+				diagonal = Verdadero
+			FinSi
+		FinPara
+	FinPara
+FinFuncion
+
+Funcion secundaria <- verificarDiagonalSecundaria(tablero,ficha)
+	Definir secundaria Como Logico
+	Definir i,j Como Entero
+	secundaria <- Falso
+	Para i <- 0 Hasta 2 Hacer
+		Para j <- 3 Hasta 6 Hacer
+			Si tablero(i,j) = ficha Y tablero(i+1,j-1) = ficha Y tablero(i+2,j-2) = ficha Y tablero(i+3,j-3) = ficha Entonces
+				secundaria = Verdadero
+			FinSi
+		FinPara
+	FinPara
+FinFuncion

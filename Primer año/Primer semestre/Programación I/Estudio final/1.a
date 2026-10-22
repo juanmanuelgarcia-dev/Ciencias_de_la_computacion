@@ -1,0 +1,169 @@
+Algoritmo tateti
+	definir ficha,tablero Como Caracter
+	definir turno,jugador como entero
+	definir ganador,terminarJuego Como Logico
+	terminarJuego <- Falso
+	ganador <- Falso
+	turno <- 1
+	Dimension tablero(3,3)
+	inicializarTablero(tablero)
+	mostrarTablero(tablero)
+	Repetir
+		si turno % 2 <> 0 Entonces
+			ficha <- "X"
+			jugador <- 1
+		SiNo
+			ficha <- "O"
+			jugador <- 2
+		FinSi
+		solicitarPosicionEnElTablero(tablero,ficha)
+		mostrarTablero(tablero)
+		si verificarGanador(tablero,ficha) = Verdadero Entonces
+			ganador = Verdadero
+			terminarJuego = Verdadero
+		FinSi
+		turno <- turno + 1
+		si turno > 9 y ganador = falso Entonces
+			terminarJuego = Verdadero
+		FinSi
+	Mientras Que terminarJuego = Falso
+	si ganador = Verdadero Entonces
+		Escribir "El jugador ",jugador," con la ficha ",ficha," ganó"
+	SiNo
+		Escribir "Hubo un empate"
+	FinSi
+FinAlgoritmo
+
+SubProceso inicializarTablero(tablero)
+	definir i,j Como Entero
+	para i <- 0 Hasta 2 Hacer
+		para j <- 0 Hasta 2 Hacer
+			tablero(i,j) <- "A"
+		FinPara
+	FinPara
+FinSubProceso
+
+SubProceso mostrarTablero(tablero)
+	definir i,j Como Entero
+	para i <- 0 Hasta 2 Hacer
+		para j <- 0 Hasta 2 Hacer
+			si tablero(i,j) = "A" Entonces
+				Escribir Sin Saltar "[ ]"
+				Escribir Sin Saltar " "
+			SiNo
+				Escribir Sin Saltar "[ ",tablero(i,j)," ]"
+				Escribir Sin Saltar " "
+			FinSi
+		FinPara
+		Escribir ""
+	FinPara
+FinSubProceso
+
+SubProceso solicitarPosicionEnElTablero(tablero,ficha)
+	Definir fila,columna Como Entero
+	definir repetirSolicitud Como Logico
+	Repetir
+		repetirSolicitud <- Falso
+		Escribir "Ingrese la fila que desea: "
+		leer fila
+		Escribir "Ingrese la columna que desea: "
+		leer columna
+		si fila < 0 o fila > 2 o columna < 0 o columna > 2 Entonces
+			repetirSolicitud = Verdadero
+			Escribir "Esas posiciones no existen: "
+		SiNo
+			si tablero(fila,columna) <> "A" Entonces
+				Escribir "Esa posicion se encuentra ocupada"
+				RepetirSolicitud = Verdadero
+			FinSi
+		FinSi
+	Mientras Que repetirSolicitud = Verdadero
+	tablero(fila,columna) <- ficha
+FinSubProceso
+
+Funcion ganador <- verificarGanador(tablero,ficha)
+	definir ganador Como Logico
+	ganador <- Falso
+	si verificarPosicionDiagonal(tablero,ficha) = Verdadero Entonces
+		ganador <- Verdadero
+	SiNo
+		si verificarPosicionDiagonalSecundaria(tablero,ficha) = Verdadero Entonces
+			ganador <- Verdadero
+		SiNo
+			si verificarPosicionDiagonalFila(tablero,ficha) = Verdadero Entonces
+				ganador <- Verdadero
+			SiNo
+				si verificarPosicionDiagonalColumna(tablero,ficha) = Verdadero Entonces
+					ganador = Verdadero
+				FinSi
+			FinSi
+		FinSi
+	FinSi
+FinFuncion
+
+Funcion diagonal <- verificarPosicionDiagonal(tablero,ficha)
+	definir diagonal Como Logico
+	definir i,contador como entero
+	diagonal = Falso
+	contador <- 0
+	para i <- 0 Hasta  2 Hacer
+		si tablero(i,i) = ficha Entonces
+			contador <- contador + 1
+		FinSi
+	FinPara
+	si contador = 3 Entonces
+		diagonal = Verdadero
+	FinSi
+FinFuncion
+
+funcion secundaria <- verificarPosicionDiagonalSecundaria(tablero,ficha)
+	definir secundaria Como Logico
+	definir i,contador Como Entero
+	secundaria = Falso
+	contador <- 0
+	para i <- 0 Hasta 2 Hacer
+		si tablero(i,2-i) = ficha Entonces
+			contador <- contador + 1
+		FinSi
+	FinPara
+	si contador = 3 Entonces
+		secundaria = Verdadero
+	FinSi
+FinFuncion
+
+funcion fila <- verificarPosicionDiagonalFila(tablero,ficha)
+	definir fila Como Logico
+	definir i,j,contador Como Entero
+	fila = Falso
+	contador <- 0
+	para i <- 0 Hasta  2 Hacer
+		para j <- 0 Hasta 2 Hacer
+			si tablero(i,j) = ficha Entonces
+				contador <- contador + 1
+			FinSi
+		FinPara
+		si contador = 3 Entonces
+			fila = Verdadero
+		FinSi
+		contador <- 0
+	FinPara
+FinFuncion
+
+Funcion columna <- verificarPosicionDiagonalColumna(tablero,ficha)
+	definir columna Como Logico
+	definir i,j,contador Como Entero
+	columna = Falso
+	contador = 0
+	para i <- 0 Hasta 2 Hacer
+		para j <- 0 Hasta 2 Hacer
+			si tablero(j,i) = ficha Entonces
+				contador <- contador + 1
+			FinSi
+		FinPara
+		si contador = 3 Entonces
+			columna = Verdadero
+		FinSi
+		contador <- 0
+	FinPara
+FinFuncion
+	

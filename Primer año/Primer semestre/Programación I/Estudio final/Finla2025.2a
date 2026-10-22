@@ -1,0 +1,150 @@
+Algoritmo dragones
+	definir tablero,salud,orden,filaJugador,columnaJugador,cantidadDragones,cantidadPociones,numJugada Como Entero
+	Definir posicion,jugarVuelta Como Caracter
+	Definir desbordeMatriz Como Logico
+	Repetir
+	//Ingreso los valores del jugador
+		filaJugador <- 0
+		columnaJugador <- 0
+		salud <- 100
+		numJugada <- 0
+		//Valido el orden de la matriz
+	Repetir
+			Escribir "Ingrese el orden: "
+			leer orden
+		Mientras Que orden < 8 o orden > 15
+		Dimension tablero(orden,orden)
+	
+		cantidadDragones <- orden
+		cantidadPociones <- orden
+		Escribir "Inicio del juego"
+		Escribir ""
+		//IniciarMatriz
+		inicializacionMatriz(orden,tablero)
+		//Mostrar Matriz
+		mostrarMatriz(tablero,orden,filaJugador,columnaJugador)
+	
+		Repetir
+			Repetir
+				desbordeMatriz <- Falso
+				Escribir "Ingrese la posicion a moverse: "
+				leer posicion
+				posicion <- Mayusculas(posicion)
+				desbordeMatriz = verificarDesbordeSegunPosicion(orden,filaJugador,columnaJugador,posicion)
+			Mientras Que (posicion <> "W" y posicion <> "A" y posicion <> "S" y posicion <> "D") o desbordeMatriz = Verdadero
+			
+			Escribir "Comando ",posicion
+			solicitarPosicion(tablero,orden,filaJugador,columnaJugador,posicion)
+			verificarPosicion(tablero,orden,columnaJugador,filaJugador,salud,cantidadDragones)
+			mostrarMatriz(tablero,orden,filaJugador,columnaJugador)
+			numJugada <- numJugada + 1
+			Escribir "Jugada número ",numJugada
+			Escribir "Salud ",salud
+			
+		Mientras Que cantidadDragones > 0 y salud > 0
+		si cantidadDragones = 0 Entonces
+			Escribir "Todos los dragones derrotados"
+		SiNo
+			Escribir "El guerrero murió"
+		FinSi
+		Repetir
+			Escribir "Desea seguir jugando (S/N): "
+			leer jugarVuelta
+			jugarVuelta <- Mayusculas(jugarVuelta)
+		Mientras Que jugarVuelta <> "S" y jugarVuelta <> "N"
+	mientras que jugarVuelta = "S"
+FinAlgoritmo
+
+SubProceso inicializacionMatriz(orden,tablero)
+	Definir i,j,fila,columna Como Entero
+	para i <- 0 Hasta orden - 1 Hacer
+		para j <- 0 Hasta orden - 1 Hacer
+			tablero(i,j) <- 0
+		FinPara
+	FinPara
+	agregardragonesOpociones(orden,tablero)
+FinSubProceso
+
+SubProceso agregardragonesOpociones(orden,tablero)
+	definir fila,columna,i Como Entero
+	para i <- 0 Hasta (orden * 2) - 1 Hacer
+		Repetir
+			fila <- Aleatorio(0,orden-1)
+			columna <- Aleatorio(0,orden-1)
+		Mientras Que tablero(fila,columna) <> 0
+		si i <= orden - 1 Entonces
+			tablero(fila,columna) <- 2
+		SiNo
+			tablero(fila,columna) <- 3
+		FinSi
+	FinPara
+FinSubProceso
+
+SubProceso mostrarMatriz(tablero,orden,filaJugador,columnaJugador)
+	Definir i,j Como Entero
+	para i <- 0 Hasta orden - 1 Hacer
+		para j <- 0 Hasta orden - 1 Hacer
+			si i = filaJugador y j = columnaJugador Entonces
+				Escribir Sin Saltar "[1]"
+				Escribir Sin Saltar " "
+			SiNo
+				Escribir Sin Saltar "[",tablero(i,j),"]"
+				Escribir Sin Saltar " "
+			FinSi
+		FinPara
+		Escribir ""
+	FinPara
+FinSubProceso
+
+SubProceso solicitarPosicion(tablero,orden,filaJugador Por Referencia,columnaJugador Por Referencia,posicion)
+	segun posicion Hacer
+		"W":
+			filaJugador <- filaJugador - 1
+		"S":
+			filaJugador <- filaJugador + 1
+		"A":
+			columnaJugador <- columnaJugador - 1
+		"D":
+			columnaJugador <- columnaJugador + 1
+	FinSegun
+FinSubProceso
+
+Funcion desborde = verificarDesbordeSegunPosicion(orden,filaJugador,columnaJugador,posicion)
+	Definir desborde Como Logico
+	desborde = Falso
+	Segun posicion Hacer
+		"W":
+			si filaJugador - 1 < 0 Entonces
+				desborde = Verdadero
+			FinSi
+		"S":
+			si filaJugador + 1 > orden-1 Entonces
+				desborde = Verdadero
+			FinSi
+		"A":
+			si columnaJugador - 1 < 0 Entonces
+				desborde = Verdadero
+			FinSi
+		"D":
+			si columnaJugador + 1 > orden-1 Entonces
+				desborde = Verdadero
+			FinSi
+	FinSegun
+FinFuncion
+
+SubProceso verificarPosicion(tablero,orden,columnaJugador,filaJugador,salud Por Referencia,cantidadDragones Por Referencia)
+	si tablero(filaJugador,columnaJugador) = 2 Entonces
+		Escribir "Dragón derrotado"
+		tablero(filaJugador,columnaJugador) <- 0
+		salud <- salud - 30
+		cantidadDragones <- cantidadDragones -1
+	SiNo
+		si tablero(filaJugador,columnaJugador) = 3 Entonces
+			Escribir "Poción encontrada"
+			tablero(filaJugador,columnaJugador) <- 0
+			salud <- salud + 15
+		FinSi
+	FinSi
+FinSubProceso
+
+	

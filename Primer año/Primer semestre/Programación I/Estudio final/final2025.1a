@@ -1,0 +1,82 @@
+Algoritmo panelSolar
+	definir tablero,panelA,panelS Como Caracter
+	definir fila,columna,filaCluster,columnaCluster Como Entero
+	panelA <- "A"
+	panelS <- "S"
+	
+	Repetir
+		Escribir "Ingrese la cantidad de filas(divisible por 2 o por 3): "
+		leer fila
+	Mientras Que (fila % 2 <> 0) y (fila % 3 <> 0)
+	
+	Repetir
+		Escribir "Ingrese la cantidad de columnas(divisible por 2 o por 3): "
+		leer columna
+	Mientras Que (columna % 2 <> 0) y (columna % 3 <> 0)
+	
+	Dimension tablero(fila,columna)
+	
+	iniciarMatriz(tablero,fila,columna)
+	mostrarMatriz(tablero,fila,columna)
+	
+	filaCluster = calcularDimensiones(tablero,fila)
+	columnaCluster = calcularDimensiones(tablero,columna)
+	
+	acomodarPaneles(fila,columna,panelA,panelS,tablero,filaCluster,columnaCluster)
+	mostrarMatriz(tablero,fila,columna)
+FinAlgoritmo
+
+SubProceso iniciarMatriz(tablero,fila,columna)
+	definir i,j Como Entero
+	para i <- 0 Hasta fila - 1 Hacer
+		para j <- 0 Hasta columna - 1 Hacer
+			tablero(i,j) <- " "
+		FinPara
+	FinPara
+FinSubProceso
+
+SubProceso mostrarMatriz(tablero,fila,columna)
+	Definir i,j Como Entero
+	para i <- 0 Hasta fila - 1 Hacer
+		para j <- 0 Hasta columna - 1 Hacer
+			Escribir Sin Saltar tablero(i,j)
+			Escribir Sin Saltar " "
+		FinPara
+		Escribir ""
+	FinPara
+FinSubProceso
+
+Funcion dimensionN <- calcularDimensiones(tablero,n)
+	Definir dimensionN Como Entero
+	si (n % 2 = 0) y (n % 3 = 0) Entonces
+		dimensionN <- n / 3
+	SiNo
+		si (n % 2 <> 0) y (n % 3 = 0) Entonces
+			dimensionN <- n / 3
+		SiNo
+			si (n % 2 = 0) y (n % 3 <> 0) Entonces
+				dimensionN <- n / 2
+			FinSi
+		FinSi
+	FinSi
+FinFuncion
+
+SubProceso acomodarPaneles(fila,columna,panelA,panelS,tablero,filaCluster,columnaCluster)
+	Definir i,j,totalCluster,Fcluster,cCluster Como entero
+	definir letra Como Caracter
+	para i <- 0 Hasta fila-1 Hacer
+		para j <- 0 Hasta columna-1 Hacer
+			Fcluster <- trunc(i / filaCluster)
+			cCluster <- trunc(j / columnaCluster)
+			si (Fcluster + cCluster) % 2 = 0 Entonces
+				letra <- panelA
+			SiNo
+				letra <- panelS
+			FinSi
+			tablero(i,j) <- letra
+		FinPara
+	FinPara
+FinSubProceso
+
+
+

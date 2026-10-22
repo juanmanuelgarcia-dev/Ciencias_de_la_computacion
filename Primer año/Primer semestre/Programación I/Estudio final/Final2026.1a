@@ -1,0 +1,111 @@
+Algoritmo final1
+	definir matriz,orden,fila,columna Como Entero
+	definir repetirSolicitud Como Logico
+	
+	Repetir
+		Escribir "Ingrese el orden de la matriz: "
+		leer orden
+	Mientras Que orden < 3 o orden > 9
+	
+	Dimension matriz(orden,orden)
+	cargarValoresMatriz(orden,matriz)
+	MostrarMatriz(orden,matriz)
+	
+	Repetir
+		repetirSolicitud = Falso
+		Escribir "Ingrese la fila de la posicion del sensor: "
+		leer fila
+		Escribir "Ingrese la columna de la posicion del sensor: "
+		leer columna
+		fila <- fila - 1
+		columna <- columna - 1
+		si fila < 0 o fila > orden - 1 o columna < 0 o columna > orden - 1 Entonces
+			Escribir "Esos valores son incorrectos: "
+			repetirSolicitud = Verdadero
+		FinSi
+	Mientras Que repetirSolicitud = Verdadero
+	
+	eliminarTempAdyacentes1(matriz,fila,columna,orden)
+	MostrarMatriz(orden,matriz)
+	Escribir ""
+	Escribir ""
+	compactacionMatriz(matriz,orden)
+	MostrarMatriz(orden,matriz)
+FinAlgoritmo
+
+SubProceso cargarValoresMatriz(orden,matriz)
+	definir i,j Como Entero
+	para i <- 0 Hasta orden - 1 Hacer
+		para j <- 0 Hasta orden - 1 Hacer
+			matriz(i,j) <- Aleatorio(0,99)
+		FinPara
+	FinPara
+	matriz(2,2) <- 4
+	matriz(3,2) <- 40
+	matriz(3,1) <- 8
+	matriz(1,2) <- 12
+	matriz(2,3) <- 64
+FinSubProceso
+
+SubProceso MostrarMatriz(orden,matriz)
+	definir i,j Como Entero
+	para i <- 0 Hasta orden - 1 Hacer
+		para j <- 0 Hasta orden - 1 Hacer
+			si matriz(i,j) <> - 1 Entonces
+				Escribir Sin Saltar matriz(i,j)
+				Escribir Sin Saltar " "
+			SiNo
+				Escribir Sin Saltar "  "
+			FinSi
+		FinPara
+		Escribir ""
+	FinPara
+FinSubProceso
+
+SubProceso eliminarTempAdyacentes1(matriz,fila,columna,orden)
+	definir i,j Como Entero
+	para i <- limiteInferior(fila,orden) Hasta limiteSuperior(fila,orden) Hacer
+		para j <- limiteInferior(columna,orden) Hasta limiteSuperior(columna,orden) Hacer
+			si no matriz(i,j) = matriz(fila,columna) Entonces
+				si matriz(i,j) % matriz(fila,columna) = 0 Entonces
+					matriz(i,j) = -1
+				FinSi
+			FinSi
+		FinPara
+	FinPara
+FinSubProceso
+
+funcion limiteInf <- limiteInferior(n,orden)
+	Definir limiteInf Como Entero
+	si n = 0 Entonces
+		limiteInf <- 0
+	SiNo
+		limiteInf <- n - 1
+	FinSi
+FinFuncion
+
+Funcion limiteSup <- limiteSuperior(m,orden)
+	Definir limiteSup Como Entero
+	si m = orden - 1 Entonces
+		limiteSup <- m
+	SiNo
+		limiteSup <- m + 1
+	FinSi
+FinFuncion
+
+SubProceso compactacionMatriz(matriz, orden)
+    Definir i, j, destino Como Entero
+    Para j <- 0 Hasta orden-1 Hacer
+        destino <- 0
+        Para i <- 0 Hasta orden-1 Hacer
+            Si matriz(i,j) <> -1 Entonces
+                matriz(destino,j) <- matriz(i,j)
+                Si destino <> i Entonces
+                    matriz(i,j) <- -1
+                FinSi
+                destino <- destino + 1
+            FinSi
+        FinPara
+    FinPara
+FinSubProceso
+	

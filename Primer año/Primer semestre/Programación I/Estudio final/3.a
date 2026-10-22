@@ -1,0 +1,197 @@
+Algoritmo LabOrg7000
+	definir tablero Como Caracter
+	Definir seleccion,filaBrazoA,columnaBrazoA,filaBrazoB,columnaBrazoB Como Entero
+	dimension tablero(9,9)
+	filaBrazoA <- 0
+	columnaBrazoA <- 0
+	filaBrazoB <- 8
+	columnaBrazoB <- 8
+	iniciarMatriz(tablero)
+	Repetir
+		seleccion = seleccionarOpcionMenu
+
+		Segun seleccion Hacer
+			1:
+				almacenarUnaMuestra(tablero,filaBrazoA,columnaBrazoA,filaBrazoB,columnaBrazoB)
+			2:
+				retirarUnaMuestra(tablero,filaBrazoA,columnaBrazoA,filaBrazoB,columnaBrazoB)
+			3:
+				moverMuestra(tablero,filaBrazoA,columnaBrazoA,filaBrazoB,columnaBrazoB)
+			4:
+				ListarMuestras(tablero)
+			5:
+				Escribir "Gracias por usar nuestro servicio"
+		FinSegun
+	Mientras Que seleccion <> 5
+	
+FinAlgoritmo
+
+Funcion seleccion = seleccionarOpcionMenu
+	definir seleccion Como Entero
+	Repetir
+		Escribir "1. Almacenar"
+		Escribir "2. Retirar"
+		Escribir "3. Mover"
+		Escribir "4. Listar"
+		Escribir "5. Salir"
+		Escribir "Ingrese la opcion: "
+		leer seleccion
+	Mientras Que seleccion < 1 o seleccion > 5
+FinFuncion
+
+SubProceso almacenarUnaMuestra(tablero,filaBrazoA Por Referencia,columnaBrazoA Por Referencia,filaBrazoB Por Referencia,columnaBrazoB Por Referencia)
+	definir fila,columna,tipoBrazo Como Entero
+	definir muestra Como Caracter
+	Definir almacenado Como Logico
+	Repetir
+		Escribir "Ingrese el nombre de la muestra: "
+		leer muestra
+	Mientras Que muestra = "a"
+	Repetir
+		almacenado = Verdadero
+		Escribir "Ingrese la fila donde desea almacenar: "
+		leer fila
+		Escribir "Ingrese la columna donde desea almacenar: "
+		leer columna
+		Escribir "Ingrese el brazo que desea ocupar(1.brazoA, 2.BrazoB)"
+		leer tipoBrazo
+		fila <- fila-1
+		columna <- columna-1
+		si fila < 0 o fila > 8 o columna < 0 o columna > 8 Entonces
+			Escribir "Esa posicion no existe"
+			almacenado = Falso
+		SiNo
+			si tablero(fila,columna) <> "a" Entonces
+				Escribir "la posicion(",fila,",",columna,") esta ocupada por la muestra ",muestra
+				almacenado = Falso
+			SiNo
+				si tipoBrazo < 1 o tipoBrazo > 2 Entonces
+					Escribir "Ese no es un tipo de brazo: "
+					almacenado = Falso
+				SiNo
+					si fila = 0 y columna = 0 o fila = 8 y columna = 8 Entonces
+						Escribir "esa posicion es ocupadas por uno de los brazos respectivamente"
+						almacenado = Falso
+					FinSi
+				FinSi
+			FinSi
+		FinSi
+	Mientras que almacenado = Falso
+	tablero(fila,columna) <- muestra
+	si tipoBrazo = 1 Entonces
+		filaBrazoA <- fila
+		columnaBrazoA <- columna
+	SiNo
+		filaBrazoB <- fila
+		columnaBrazoB <- columna
+	FinSi
+	Escribir "Se almaceno la muestra ",muestra," en la posicion(",fila+1,",",columna+1,")"
+FinSubProceso
+
+SubProceso iniciarMatriz(tablero) 
+	definir i,j Como Entero
+	para i <- 0 Hasta 8 Hacer
+		para j <- 0 Hasta 8 Hacer
+			tablero(i,j) <- "a"
+		FinPara
+	FinPara
+FinSubProceso
+
+SubProceso retirarUnaMuestra(tablero,filaBrazoA Por Referencia,columnaBrazoA Por Referencia,filaBrazoB Por Referencia,columnaBrazoB Por Referencia)
+	Definir fila,columna,tipoBrazo Como Entero
+	Definir almacenado Como Logico
+	Repetir
+		almacenado = Verdadero
+		Escribir "Ingrese la fila que desea para extraer: "
+		leer fila
+		Escribir "Ingrese la columna que desea para extraer: "
+		leer columna
+		Escribir "Ingrese el brazo que desea ocupar(1.brazoA, 2.BrazoB)"
+		leer tipoBrazo
+		fila <- fila-1
+		columna <- columna-1
+		si fila < 0 o fila > 8 o columna < 0 o columna > 8 Entonces
+			Escribir "Esas posiciones no existen"
+			almacenado = Falso
+		SiNo
+			si tipoBrazo < 1 o tipoBrazo > 2 Entonces
+				Escribir "Ese no es un tipo de brazo"
+			SiNo
+				si fila = 0 y columna = 0 o fila = 8 y columna = 8 Entonces
+					Escribir "esa posicion es ocupadas por uno de los brazos respectivamente"
+					almacenado = Falso
+				FinSi
+			FinSi
+		FinSi
+	Mientras Que almacenado = Falso
+	si tablero(fila,columna) = "a" Entonces
+		Escribir "Lo siento no puedo retirar una muestra donde no hay una, intentelo nuevamente"
+	SiNo
+		Escribir "Se ha retirado con exito la muestra ",tablero(fila,columna)," en la posicion(",fila+1,",",columna+1,")"
+		si tipoBrazo = 1 Entonces
+			filaBrazoA <- 0
+			columnaBrazoA <- 0
+		SiNo
+			filaBrazoB <- 8
+			columnaBrazoB <- 8
+		FinSi
+	FinSi
+FinSubProceso
+
+SubProceso moverMuestra(tablero,filaBrazoA Por Referencia,columnaBrazoA Por Referencia,filaBrazoB Por Referencia,columnaBrazoB Por Referencia)
+	Definir fila,columna,filaDestino,columnaDestino,diferenciaA,diferenciaB Como Entero
+	definir movido Como Logico
+	Repetir
+		movido = Verdadero
+		Escribir "Ingrese la fila de origen: "
+		leer fila
+		Escribir "Ingrese la columna de origen: "
+		leer columna
+		Escribir "Ingrese la fila de destino: "
+		leer filaDestino
+		Escribir "Ingrese la columna de destino: "
+		leer columnaDestino
+		fila <- fila -1
+		columna <- columna -1
+		filaDestino <- filaDestino -1
+		columnaDestino <- columnaDestino -1
+		si fila < 0 o fila > 8 o columna < 0 o columna > 8 o filaDestino < 0 o filaDestino > 8 o columnaDestino < 0 o columnaDestino > 8 Entonces
+			Escribir "Esas posiciones no existen: "
+		SiNo
+			si tablero(filaDestino,columnaDestino) <> "a" Entonces
+				Escribir "No se puede mover hacia esa posicion"
+				Escribir "la posicion(",filaDestino,",",columnaDestino,") esta ocupada por la muestra ",muestra
+			FinSi
+		FinSi
+	Mientras Que movido = Falso
+	si tablero(fila,columna) = "a" Entonces
+		Escribir "Lo siento no puedo mover una muestra donde no hay una, intentelo nuevamente"
+	SiNo
+		diferenciaA <-abs(filaBrazoA - fila) + abs(columnaBrazoA - columna)
+		diferenciaB <-abs(filaBrazoB - fila) + abs(columnaBrazoB - columna)
+		si diferenciaA <= diferenciaB Entonces
+			Escribir "El brazo A movio la muestra"
+			filaBrazoA <- fila
+			columnaBrazoA <- columna
+		SiNo
+			Escribir "El brazo B movio la muestra"
+			filaBrazoB <- fila
+			columnaBrazoB <- columna
+		FinSi
+		Escribir "Se ha movido con exito la muestra ",tablero(fila,columna)," en la posicion(",fila+1,",",columna+1,") a la posicion (",filaDestino+1,",",columnaDestino+1,")"
+	FinSi
+FinSubProceso
+
+SubProceso ListarMuestras(tablero)
+	definir i,j,muestraCantidad Como Entero
+	muestraCantidad <- 0
+	para i <- 0 Hasta 8 Hacer
+		para j <- 0 Hasta 8 Hacer
+			si tablero(i,j) <> "a"
+				muestraCantidad <-muestraCantidad +1
+				Escribir "Muestra N°",muestraCantidad,":",tablero(i,j)," en la posicion(",i+1,",",j+1,")"
+			FinSi
+		FinPara
+	FinPara
+FinSubProceso
+	
